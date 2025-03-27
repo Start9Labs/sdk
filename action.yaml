@@ -1,18 +1,18 @@
-name: 'StartOS SDK'
-description: 'Provides start-sdk and start-cli'
+name: "StartOS SDK"
+description: "Provides start-sdk and start-cli"
 runs:
-  using: 'composite'
+  using: "composite"
   steps:
     - name: Setup Node.js environment
       uses: actions/setup-node@v4
       with:
-        node-version: '20'
+        node-version: "20"
 
     - name: Install dependencies
       run: |
         sudo rm /etc/apt/sources.list.d/microsoft-prod.list
         sudo apt-get update
-        sudo apt-get install -y git build-essential openssl libssl-dev libc6-dev clang libclang-dev ca-certificates curl
+        sudo apt-get install -y git build-essential openssl libssl-dev libc6-dev clang libclang-dev ca-certificates curl squashfs-tools-ng
         sudo snap install yq deno
         cargo install --force toml-cli web-static-pack-packer
         cargo install --git=https://github.com/Start9Labs/md-packer.git --branch=main
@@ -33,7 +33,7 @@ runs:
       uses: actions/checkout@v4
       with:
         repository: Start9Labs/start-os
-        ref: sdk
+        ref: next/minor
         submodules: recursive
 
     - name: Cache start-sdk
@@ -46,15 +46,15 @@ runs:
           ~/.cargo/registry/cache/
           ~/.cargo/git/db/
           target/
-        key: ${{ runner.os }}-start-sdk-${{ hashFiles('**/install-sdk.sh') }}
+        key: ${{ runner.os }}-start-sdk-${{ hashFiles('**/install-cli.sh') }}
 
-    - name: Install start-sdk
+    - name: Install start-cli
       run: |
-        if [ -z "$(command -v start-sdk)" ]; then
+        if [ -z "$(command -v start-cli)" ]; then
           export RUSTFLAGS=""
           export OS_ARCH=$(uname -m)
           cargo update -p time --manifest-path=core/Cargo.toml
-          make sdk
+          make cli
           echo "$HOME/.cargo/bin" >> $GITHUB_PATH
         fi
       shell: bash
