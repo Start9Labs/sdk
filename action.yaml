@@ -32,27 +32,11 @@ runs:
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v3
 
-    - name: Set up Docker
-      uses: docker/setup-docker-action@v4
-      with:
-        daemon-config: |
-          {
-            "debug": true,
-            "features": {
-              "containerd-snapshotter": false
-            }
-          }
-
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
       with:
         install: true               # Makes `docker buildx` the default subcommand
         driver: docker-container    # Use host daemon so images are visible to docker inspect
-
-    # Ensure we are on the default Docker context so start-cli can inspect images
-    # - name: Ensure default Docker context
-    #   run: docker context use default
-    #   shell: bash
 
     - name: Install start-cli
       run: |
