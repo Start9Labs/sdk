@@ -26,4 +26,5 @@ runs:
         fi
 
         curl -L "$LATEST_RELEASE_URL" -o /usr/local/bin/start-cli
+        chmox +x /usr/local/bin/start-cli
       shell: bash
